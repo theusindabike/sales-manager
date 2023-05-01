@@ -1,0 +1,15 @@
+.dockerignore
+
+**/node_modules/
+**/dist/
+**/npm-debug.log
+**/.env
+
+**/.git
+**/.gitignore
+**/.vscode
+**/.npmrc
+
+**/Dockerfile.dev
+docker-compose-dev.yaml
+README.md

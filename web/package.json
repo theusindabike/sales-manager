@@ -1,0 +1,13 @@
+{
+    "name": "sales_manager_web",
+    "version": "1.0.0",
+    "description": "Sales Manager Web",
+    "author": "Matheus Lopes <mmatheus.coder@gmail.com>",
+    "main": "server.js",
+    "scripts": {
+      "start": "node server.js"
+    },
+    "dependencies": {
+      "express": "^4.16.1"
+    }
+  }

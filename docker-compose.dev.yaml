@@ -1,0 +1,52 @@
+services:
+  backend:
+    container_name: sales_manager_api
+    build:
+      context: ./api
+      dockerfile: Dockerfile.dev
+    expose:
+      - 8000
+    ports:
+      - "8000:8000"
+    volumes:
+      - node_modules_api:/usr/src/api/node_modules
+      - ./api/:/usr/src/api
+    env_file:
+      - ./.env
+    depends_on:
+      database:
+        condition: service_healthy
+
+  database:
+    container_name: sales_manager_db
+    image: postgres:12-alpine
+    restart: always
+    volumes:
+      - ./dev-postgres-data/db:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=dev-postgres-db
+      - POSTGRES_USER=postgresuser
+      - POSTGRES_PASSWORD=postgrespassword
+    healthcheck:
+      test: ["CMD", "pg_isready", "-q", "-d", "dev-postgres-db", "-U", "postgresuser"]
+      interval: 3s
+      timeout: 3s
+      retries: 5
+  web:
+    container_name: sales_manager_web
+    build:
+      context: ./web
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3000:3000"
+    volumes:
+       - node_modules_web:/usr/src/web/node_modules
+       - ./web/:/usr/src/web
+volumes:
+  # static_files:
+  # media:
+  dev-postgres-data:
+  node_modules_api:
+  node_modules_web:
