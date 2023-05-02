@@ -1,11 +1,12 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
+import { TransactionType } from '../entities/transaction.entity';
 
 export class CreateTransactionDto {
   @ApiPropertyOptional()
   id: number;
 
   @ApiPropertyOptional()
-  type: string;
+  type: TransactionType;
 
   @ApiPropertyOptional()
   date: Date;

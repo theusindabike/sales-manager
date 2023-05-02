@@ -5,20 +5,27 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
+export enum TransactionType {
+  PRODUCER_SALE = 1,
+  AFFILIATE_SALE = 2,
+  COMMISSION_PAID = 3,
+  COMMISSION_RECIEVED = 4,
+}
+
 @Entity()
 export class Transaction {
   @PrimaryGeneratedColumn({
     type: 'bigint',
-    name: 'user_id',
   })
   id: number;
 
   @Column({
-    type: 'varchar',
-    length: 128,
+    type: 'enum',
+    enum: TransactionType,
+    default: TransactionType.PRODUCER_SALE,
     nullable: false,
   })
-  type: string;
+  type: TransactionType;
 
   @Column({
     type: 'timestamptz',
