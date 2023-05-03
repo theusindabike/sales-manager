@@ -56,4 +56,32 @@ export class Transaction {
 
   @CreateDateColumn()
   createdAt: Date;
+
+  constructor(
+    id?: number,
+    type?: TransactionType,
+    date?: Date,
+    productDescription?: string,
+    value?: number,
+    sellerName?: string,
+    createdAt?: Date,
+  ) {
+    this.id = id || null;
+    this.type = type || null;
+    this.date = date || null;
+    this.productDescription = productDescription || '';
+    this.value = value || null;
+    this.sellerName = sellerName || '';
+    this.createdAt = createdAt || null;
+  }
+
+  // constructor(t: Partial<Transaction>) {
+  //   this.id = t.id || null;
+  //   this.type = t.type || null;
+  //   this.date = t.date || null;
+  //   this.productDescription = t.productDescription || '';
+  //   this.value = t.value || null;
+  //   this.sellerName = t.sellerName || '';
+  //   this.createdAt = t.createdAt || null;
+  // }
 }
