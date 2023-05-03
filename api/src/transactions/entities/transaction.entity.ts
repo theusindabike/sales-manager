@@ -41,10 +41,8 @@ export class Transaction {
   productDescription: string;
 
   @Column({
-    type: 'decimal',
-    precision: 10,
-    default: 0,
-    scale: 2,
+    type: 'float',
+    default: 0.0,
     nullable: false,
   })
   value: number;

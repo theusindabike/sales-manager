@@ -2,7 +2,7 @@ run:
 	docker-compose down --volumes && docker-compose up --build
 
 run_dev:
-	docker-compose -f docker-compose.dev.yaml down --volumes && docker-compose -f docker-compose.dev.yaml up --build
+	docker-compose -f docker-compose.dev.yaml down --volumes && docker-compose -f docker-compose.dev.yaml up --build --renew-anon-volumes
 
 tests:
 	docker-compose down --volumes && docker-compose build && docker-compose run --rm web sh -c "python manage.py test --nomigrations --noinput"

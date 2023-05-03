@@ -9,8 +9,8 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - node_modules_api:/usr/src/api/node_modules
       - ./api/:/usr/src/api
+      - node_modules_api:/usr/src/api/node_modules/
     env_file:
       - ./.env
     depends_on:
@@ -47,8 +47,6 @@ services:
        - node_modules_web:/usr/src/web/node_modules
        - ./web/:/usr/src/web
 volumes:
-  # static_files:
-  # media:
   dev-postgres-data:
   node_modules_api:
   node_modules_web:
