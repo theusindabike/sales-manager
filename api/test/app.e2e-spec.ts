@@ -1,28 +1,35 @@
-// import * as request from 'supertest';
-// import { Test } from '@nestjs/testing';
-// import { AppModule } from './../src/app.module';
-// import { INestApplication } from '@nestjs/common';
+import * as request from 'supertest';
+import { Test } from '@nestjs/testing';
+import { INestApplication } from '@nestjs/common';
+import { AppModule } from '../src/app.module';
+import { DataSource } from 'typeorm';
+import { setupDatabase } from './setup-database';
 
-// describe('AppController (e2e)', () => {
-//   let app: INestApplication;
+describe('AppController (e2e)', () => {
+  let app: INestApplication;
 
-//   beforeAll(async () => {
-//     const moduleFixture = await Test.createTestingModule({
-//       imports: [AppModule],
-//     }).compile();
+  beforeAll(async () => {
+    const dataSource = await setupDatabase();
 
-//     app = moduleFixture.createNestApplication();
-//     await app.init();
-//   });
+    const moduleFixture = await Test.createTestingModule({
+      imports: [AppModule],
+    })
+      .overrideProvider(DataSource)
+      .useValue(dataSource)
+      .compile();
 
-//   afterAll(async () => {
-//     await app.close();
-//   });
+    app = moduleFixture.createNestApplication();
+    await app.init();
+  });
 
-//   it('/ (GET)', () => {
-//     return request(app.getHttpServer())
-//       .get('/')
-//       .expect(200)
-//       .expect('nossa olha como node é legal');
-//   });
-// });
+  afterAll(async () => {
+    await app.close();
+  });
+
+  it('/ (GET)', () => {
+    return request(app.getHttpServer())
+      .get('/')
+      .expect(200)
+      .expect('nossa olha como node é legal');
+  });
+});

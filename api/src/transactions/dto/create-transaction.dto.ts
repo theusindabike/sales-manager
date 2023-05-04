@@ -19,7 +19,4 @@ export class CreateTransactionDto {
 
   @ApiPropertyOptional()
   sellerName: string;
-
-  @ApiPropertyOptional()
-  createdAt: Date;
 }

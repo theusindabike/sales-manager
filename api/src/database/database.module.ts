@@ -1,9 +1,6 @@
-import { Global, Module } from '@nestjs/common';
-import { databaseProviders } from './database.providers';
+import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Transaction } from 'src/transactions/entities/transaction.entity';
-
 
 @Module({
   imports: [
@@ -17,12 +14,10 @@ import { Transaction } from 'src/transactions/entities/transaction.entity';
         username: configService.get('DB_USERNAME'),
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_NAME'),
-        entities: [Transaction],
+        entities: [__dirname + '../../src/**/*.entity{.ts,.js}'],
         synchronize: true,
       }),
     }),
   ],
-  // providers: [...databaseProviders(),],
-  // exports: [...databaseProviders()],
 })
 export class DatabaseModule {}

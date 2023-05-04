@@ -1,64 +1,27 @@
 import * as request from 'supertest';
 import { Test } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { TransactionsModule } from '../../src/transactions/transactions.module';
-import { Transaction } from '../../src/transactions/entities/transaction.entity';
+import { DataSource } from 'typeorm';
+
 import { AppModule } from '../../src/app.module';
-import { DataType, newDb } from 'pg-mem';
-import { v4 } from 'uuid';
-import { Repository } from 'typeorm';
-import { TypeOrmOptionsFactory } from '@nestjs/typeorm';
+import { TransactionType } from '../../src/transactions/entities/transaction.entity';
+
+import { setupDatabase } from '../setup-database';
 
 describe('TransactionController (e2e)', () => {
   let app: INestApplication;
-  let repository: Repository<Transaction>;
 
   beforeAll(async () => {
-    const db = newDb();
-
-    db.public.registerFunction({
-      name: 'current_database',
-      args: [],
-      returns: DataType.text,
-      implementation: () => '',
-    });
-
-    // db.registerExtension('uuid-ossp', (schema) => {
-    //   schema.registerFunction({
-    //     name: 'uuid_generate_v4',
-    //     returns: DataType.uuid,
-    //     implementation: v4,
-    //     impure: true,
-    //   });
-    // });
-
-    db.public.registerFunction({
-      name: 'version',
-      implementation: () =>
-        'Im not sure about PostgreSQL version',
-    });
-
-    const connection = await db.adapters.createTypeormConnection({
-      type: 'postgres',
-      entities: [Transaction],
-      synchronize: true,
-    });
-
+    const dataSource = await setupDatabase();
     const moduleFixture = await Test.createTestingModule({
-      imports: [
-        //TransactionsModule,
-        AppModule,
-      ],
+      imports: [AppModule],
     })
-      .overrideProvider('DATA_SOURCE')
-      .useValue(connection)
+      .overrideProvider(DataSource)
+      .useValue(dataSource)
       .compile();
 
     app = moduleFixture.createNestApplication();
     await app.init();
-
-    repository = app.get<Repository<Transaction>>('TRANSACTION_REPOSITORY');
   });
 
   afterAll(async () => {
@@ -67,5 +30,28 @@ describe('TransactionController (e2e)', () => {
 
   it('/ (GET)', () => {
     return request(app.getHttpServer()).get('/').expect(200);
+  });
+
+  it('/transactions (POST)', async () => {
+    const transaction = {
+      type: TransactionType.AFFILIATE_SALE,
+      date: '2022-01-16T14:13:54-03:00',
+      productDescription: 'Product Descriptin 1',
+      value: 666,
+      sellerName: 'Seller name',
+    };
+    const data = await request(app.getHttpServer())
+      .post('/transactions')
+      .send(transaction)
+      .expect(201);
+
+    expect(data.body).toEqual({ id: '1', ...transaction });
+  });
+
+  it('/transactions/ingestTransactionFile (POST)', () => {
+    return request(app.getHttpServer())
+      .post('/transactions/upload')
+      .attach('file', './src/assets/sales_test.txt')
+      .expect(201);
   });
 });

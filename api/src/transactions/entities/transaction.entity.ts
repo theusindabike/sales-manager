@@ -1,9 +1,4 @@
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 export enum TransactionType {
   PRODUCER_SALE = 1,
@@ -54,9 +49,6 @@ export class Transaction {
   })
   sellerName: string;
 
-  @CreateDateColumn()
-  createdAt: Date;
-
   constructor(
     id?: number,
     type?: TransactionType,
@@ -64,7 +56,6 @@ export class Transaction {
     productDescription?: string,
     value?: number,
     sellerName?: string,
-    createdAt?: Date,
   ) {
     this.id = id || null;
     this.type = type || null;
@@ -72,7 +63,6 @@ export class Transaction {
     this.productDescription = productDescription || '';
     this.value = value || null;
     this.sellerName = sellerName || '';
-    this.createdAt = createdAt || null;
   }
 
   // constructor(t: Partial<Transaction>) {
@@ -82,6 +72,5 @@ export class Transaction {
   //   this.productDescription = t.productDescription || '';
   //   this.value = t.value || null;
   //   this.sellerName = t.sellerName || '';
-  //   this.createdAt = t.createdAt || null;
   // }
 }

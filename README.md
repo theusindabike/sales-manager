@@ -1,0 +1,18 @@
+# Sales Manager
+
+### Stack:
+- Docker compose
+- NestJS
+- React
+- Postgres
+
+### First Run:
+
+1. 
+
+### Next steps:
+- When e2e testing: replace real database to a memory one like pg-mem 
+- Replace sales_test.txt file for on the fly generated one at e2e tests (maybe multer.diskStorage).
+- Improve the upload -> read in memory -> save in db approach. Maybe change to save in some storage to then insert in db (maybe multer.diskStorage).
+- Improve the Express.Multer.File usage to prevent malicious code when uploading files
+- Mult-file upload

@@ -36,29 +36,32 @@ export class TransactionsService {
     return `This action removes a #${id} transaction`;
   }
 
-  async ingestSalesFile() {
-    const filePath = '/home/node/api/src/assets/sales_test.txt';
+  async ingestSalesFile(file: Express.Multer.File): Promise<Transaction[]> {
+    //const filePath = '/home/node/api/src/assets/sales_test.txt';
+    // const filePath =
+    //   '/home/matheus/Downloads/desafio-programacao-fullstack-1.2.0/sales_test.txt';
 
-    const fieldPositions = [
+    //const data = fs.readFileSync(filePath, 'utf8');
+    const fieldsSchema = [
       { name: 'type', startsAt: 0, endsAt: 1 },
       { name: 'date', startsAt: 1, endsAt: 26 },
       { name: 'productDescription', startsAt: 26, endsAt: 56 },
       { name: 'value', startsAt: 56, endsAt: 66 },
       { name: 'sellerName', startsAt: 66, endsAt: 86 },
     ];
-    const data = fs.readFileSync(filePath, 'utf8');
-    let parsedTransactions = [];
-    if (!data) {
-      // console.error(err);
+
+    if (!file) {
       throw new Error('Somethin went wrong');
     }
 
-    const lines = data.split('\n');
+    const allFileLines = Buffer.from(file.buffer).toString('utf-8');
 
-    parsedTransactions = lines.map((line) => {
+    const linesArray = allFileLines.split('\n');
+
+    const parsedTransactions = linesArray.map((line) => {
       const row = {};
 
-      fieldPositions.forEach(({ name, startsAt, endsAt }) => {
+      fieldsSchema.forEach(({ name, startsAt, endsAt }) => {
         row[name] = line.substring(startsAt, endsAt).trim();
       });
 
