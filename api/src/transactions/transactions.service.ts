@@ -1,14 +1,12 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { UpdateTransactionDto } from './dto/update-transaction.dto';
 import { Transaction } from './entities/transaction.entity';
-import { InjectRepository } from '@nestjs/typeorm';
 import { TransactionRepository } from './repository/transactions.repository';
 
 @Injectable()
 export class TransactionsService {
   constructor(
-    @Inject(TransactionRepository)
     private readonly transactionRepository: TransactionRepository, // private readonly transactionRepository: Repository<Transaction>,
   ) {}
 
@@ -90,8 +88,10 @@ export class TransactionsService {
     return transactions;
   }
 
-  getBalance(name: string): any {
-    const balanceAsSeller = this.transactionRepository.getSellerBalance(name);
+  async getBalance(name: string): Promise<any> {
+    const balanceAsSeller = await this.transactionRepository.getSellerBalance(
+      name,
+    );
 
     const balanceAsAffiliate =
       this.transactionRepository.getSellerBalance(name);

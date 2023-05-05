@@ -10,9 +10,10 @@ import { setupDatabase } from '../setup-database';
 
 describe('TransactionController (e2e)', () => {
   let app: INestApplication;
+  let dataSource: DataSource;
 
   beforeAll(async () => {
-    const dataSource = await setupDatabase();
+    dataSource = await setupDatabase();
     const moduleFixture = await Test.createTestingModule({
       imports: [AppModule],
     })
@@ -25,6 +26,7 @@ describe('TransactionController (e2e)', () => {
   });
 
   afterAll(async () => {
+    await dataSource.destroy();
     await app.close();
   });
 

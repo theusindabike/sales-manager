@@ -78,8 +78,9 @@ describe('TransactionsService', () => {
     expect(service).toBeDefined();
   });
 
-  it('get seller transactions', () => {
-    expect(service.getBalance(SELLER_1)).toEqual({
+  it('get seller transactions', async () => {
+    const result = await service.getBalance(SELLER_1);
+    expect(result).toEqual({
       name: SELLER_1,
       balanceAsSeller: 85,
       balanceAsAffiliate: 85,

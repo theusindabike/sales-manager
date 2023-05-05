@@ -1,44 +1,67 @@
 import { DataSource, Repository } from 'typeorm';
 import { Transaction, TransactionType } from '../entities/transaction.entity';
+import { Injectable } from '@nestjs/common';
+import { InjectDataSource } from '@nestjs/typeorm';
 
+@Injectable()
 export class TransactionRepository extends Repository<Transaction> {
-  constructor(private dataSource: DataSource) {
+  constructor(@InjectDataSource() private readonly dataSource: DataSource) {
     super(Transaction, dataSource.createEntityManager());
   }
 
   async getSellerBalance(sellerName: string) {
-    const rawData = await this.query(
+    const rawResult = await this.dataSource.query(
       ' \
             SELECT \
-                SUM( \
-                    CASE \
-                        WHEN type = :PRODUCER_SALE THEN value \
-                        WHEN type = :COMMISSION_PAID THEN -value \
-                        ELSE 0 \
-                    END \
-                ) AS balance \
+              t."sellerName" as name, \
+              SUM( \
+                  CASE \
+                      WHEN t."type" = $1 THEN value \
+                      WHEN t."type" = $2 THEN -value \
+                      ELSE 0 \
+                  END \
+              ) AS balance \
             FROM \
-                transactions \
+              transaction t\
             WHERE \
-                sellerName = :sellerName \
+              t."sellerName" = $3 \
+            GROUP BY \
+              t."sellerName" \
         ',
       [
-        {
-          sellerName: sellerName,
-          PRODUCER_SALE: TransactionType.PRODUCER_SALE,
-          COMMISSION_PAID: TransactionType.COMMISSION_PAID,
-        },
+        TransactionType.PRODUCER_SALE,
+        TransactionType.COMMISSION_PAID,
+        sellerName,
       ],
     );
-    // let sum = this.dataSource
-    //   .createQueryBuilder()
-    //   .select('SUM(t.value)', "sum")
-    //   .from(Transaction, 't')
-    //   .where(
-    //     't.sellerName = :sellerName \
-    //     AND t.type IN (:sellerTranasctionsType)',
-    //     { sellerName: sellerName, sellerTranasctionsType: [TransactionType.] },
-    //   );
-    return rawData;
+    return rawResult[0];
+  }
+
+  async getAffiliateBalance(sellerName: string) {
+    const rawResult = await this.dataSource.query(
+      ' \
+            SELECT \
+              t."sellerName" as name, \
+              SUM( \
+                  CASE \
+                      WHEN t."type" = $1 THEN value \
+                      WHEN t."type" = $2 THEN value \
+                      ELSE 0 \
+                  END \
+              ) AS balance \
+            FROM \
+              transaction t\
+            WHERE \
+              t."sellerName" = $3 \
+            GROUP BY \
+              t."sellerName" \
+        ',
+      [
+        TransactionType.AFFILIATE_SALE,
+        TransactionType.COMMISSION_RECIEVED,
+        sellerName,
+      ],
+    );
+    return rawResult[0];
   }
 }
