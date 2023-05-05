@@ -2,14 +2,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { TransactionsService } from './transactions.service';
 import { Transaction, TransactionType } from './entities/transaction.entity';
 import { TransactionRepository } from './repository/transactions.repository';
-import { getRepositoryToken } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-
-const transactionsRaw = [
-  '12022-01-15T19:20:30-03:00CURSO DE BEM-ESTAR            0000012750JOSE CARLOS',
-  '12021-12-03T11:46:02-03:00DOMINANDO INVESTIMENTOS       0000050000MARIA CANDIDA',
-  '22022-01-16T14:13:54-03:00CURSO DE BEM-ESTAR            0000012750THIAGO OLIVEIRA',
-];
 
 const SELLER_1 = 'JOSE CARLOS';
 const AFFILIATE_1 = 'MARIA CANDIDA';
@@ -65,6 +57,7 @@ describe('TransactionsService', () => {
         update: jest.fn().mockResolvedValue(true),
         delete: jest.fn().mockResolvedValue(true),
         getSellerBalance: jest.fn().mockReturnValue({ balance: 85 }),
+        getAffiliateBalance: jest.fn().mockReturnValue({ balance: 65 }),
       },
     };
     const module: TestingModule = await Test.createTestingModule({
@@ -83,7 +76,7 @@ describe('TransactionsService', () => {
     expect(result).toEqual({
       name: SELLER_1,
       balanceAsSeller: 85,
-      balanceAsAffiliate: 85,
+      balanceAsAffiliate: 65,
     });
   });
 });

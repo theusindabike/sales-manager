@@ -94,7 +94,7 @@ export class TransactionsService {
     );
 
     const balanceAsAffiliate =
-      this.transactionRepository.getSellerBalance(name);
+      this.transactionRepository.getAffiliateBalance(name);
 
     return {
       name: name,

@@ -12,7 +12,7 @@
 1. 
 
 ### Assumptions 
-1. A Seller could not be an Affiliate and vice versa
+1. A Seller could be an Affiliate and vice versa
 
 ### Next steps:
 - Fix value parse to consider cents
