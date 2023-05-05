@@ -21,7 +21,7 @@ export class TransactionsService {
   }
 
   findAll() {
-    return `This action returns all transactions`;
+    return this.transactionRepository.find();
   }
 
   async findOne(id: number): Promise<Transaction> {
