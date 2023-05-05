@@ -15,12 +15,21 @@ describe('TransactionController (e2e)', () => {
   let transactionRepository: TransactionRepository;
 
   const SELLER_NAME_1 = 'Seller name 1';
-  const transaction = {
+  const TRANSACTION_1 = {
     type: TransactionType.PRODUCER_SALE,
     date: '2022-01-16T14:13:54-03:00',
     productDescription: 'Product Description 1',
     value: 333,
     sellerName: SELLER_NAME_1,
+  };
+
+  const SELLER_NAME_2 = 'Affiliate name 1';
+  const TRANSACTION_2 = {
+    type: TransactionType.AFFILIATE_SALE,
+    date: '2022-01-16T14:13:54-03:00',
+    productDescription: 'Product Description 2',
+    value: 666,
+    sellerName: SELLER_NAME_2,
   };
 
   beforeAll(async () => {
@@ -43,11 +52,12 @@ describe('TransactionController (e2e)', () => {
   beforeEach(async () => {
     await request(app.getHttpServer())
       .post('/transactions')
-      .send(transaction)
+      .send(TRANSACTION_1)
       .expect(201);
   });
 
   afterEach(async () => {
+    // await transactionRepository.query(`TRUNCATE TABLE transaction;`);
     await transactionRepository.clear();
   });
 
@@ -61,19 +71,12 @@ describe('TransactionController (e2e)', () => {
   });
 
   it('/transactions (POST)', async () => {
-    const transaction = {
-      type: TransactionType.AFFILIATE_SALE,
-      date: '2022-01-16T14:13:54-03:00',
-      productDescription: 'Product Description 2',
-      value: 666,
-      sellerName: 'Seller name 2',
-    };
     const data = await request(app.getHttpServer())
       .post('/transactions')
-      .send(transaction)
+      .send(TRANSACTION_2)
       .expect(201);
 
-    expect(data.body).toEqual({ id: '3', ...transaction });
+    expect(data.body).toEqual({ id: expect.any(String), ...TRANSACTION_2 });
   });
 
   it('/transactions/ingestTransactionFile (POST)', async () => {
@@ -94,6 +97,21 @@ describe('TransactionController (e2e)', () => {
       name: SELLER_NAME_1,
       balanceAsSeller: 333,
       balanceAsAffiliate: 0,
+    });
+  });
+
+  it('/transactions?sellerName=<?> (GET)', async () => {
+    const data = await request(app.getHttpServer())
+      .get('/transactions?sellerName=' + encodeURI(SELLER_NAME_1))
+      .expect(200);
+
+    expect(data.body[0]).toEqual({
+      id: expect.any(Number),
+      type: TRANSACTION_1.type,
+      date: expect.any(String),
+      productDescription: TRANSACTION_1.productDescription,
+      value: TRANSACTION_1.value,
+      sellerName: TRANSACTION_1.sellerName,
     });
   });
 });

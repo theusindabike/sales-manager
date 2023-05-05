@@ -31,8 +31,13 @@ export class TransactionsController {
   }
 
   @Get()
-  findAll() {
-    return this.transactionsService.findAll();
+  async findAll() {
+    return await this.transactionsService.findAll();
+  }
+
+  @Get()
+  async findAllBySellerName(@Query('sellerName') sellerName: string) {
+    return await this.transactionsService.findAllBySellerName(sellerName);
   }
 
   @ApiConsumes('multipart/form-data')
@@ -59,7 +64,7 @@ export class TransactionsController {
     response.status(HttpStatus.CREATED).json({ ...transactions });
   }
 
-  @Get('/balance')
+  @Get('balance')
   async getBalance(
     @Res() response: Response,
     @Query('sellerName') sellerName: string,

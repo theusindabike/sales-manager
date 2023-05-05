@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
-import { UpdateTransactionDto } from './dto/update-transaction.dto';
 import { Transaction } from './entities/transaction.entity';
 import { TransactionRepository } from './repository/transactions.repository';
 
@@ -20,7 +19,7 @@ export class TransactionsService {
     return this.transactionRepository.find();
   }
 
-  findBySellerName(sellerName: string) {
+  findAllBySellerName(sellerName: string) {
     return this.transactionRepository.findAndCountBy({
       sellerName: sellerName,
     });
