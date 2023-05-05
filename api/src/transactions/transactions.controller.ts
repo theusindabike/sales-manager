@@ -11,6 +11,7 @@ import {
   ParseFilePipeBuilder,
   HttpStatus,
   Res,
+  Query,
 } from '@nestjs/common';
 import { TransactionsService } from './transactions.service';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
@@ -32,24 +33,6 @@ export class TransactionsController {
   @Get()
   findAll() {
     return this.transactionsService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.transactionsService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateTransactionDto: UpdateTransactionDto,
-  ) {
-    return this.transactionsService.update(+id, updateTransactionDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.transactionsService.remove(+id);
   }
 
   @ApiConsumes('multipart/form-data')
@@ -74,5 +57,14 @@ export class TransactionsController {
   ) {
     const transactions = this.transactionsService.ingestSalesFile(file);
     response.status(HttpStatus.CREATED).json({ ...transactions });
+  }
+
+  @Get('/balance')
+  async getBalance(
+    @Res() response: Response,
+    @Query('sellerName') sellerName: string,
+  ) {
+    const balance = await this.transactionsService.getBalance(sellerName);
+    response.status(HttpStatus.OK).json({ ...balance });
   }
 }

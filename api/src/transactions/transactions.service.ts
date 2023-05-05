@@ -20,19 +20,7 @@ export class TransactionsService {
     return this.transactionRepository.find();
   }
 
-  async findOne(id: number): Promise<Transaction> {
-    return this.transactionRepository.findOneOrFail({ where: { id: id } });
-  }
-
-  update(id: number, updateTransactionDto: UpdateTransactionDto) {
-    return `This action updates a #${id} transaction`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} transaction`;
-  }
-
-  findBy(sellerName: string) {
+  findBySellerName(sellerName: string) {
     return this.transactionRepository.findAndCountBy({
       sellerName: sellerName,
     });
@@ -94,12 +82,14 @@ export class TransactionsService {
     );
 
     const balanceAsAffiliate =
-      this.transactionRepository.getAffiliateBalance(name);
+      await this.transactionRepository.getAffiliateBalance(name);
 
     return {
       name: name,
-      balanceAsSeller: balanceAsSeller['balance'],
-      balanceAsAffiliate: balanceAsAffiliate['balance'],
+      balanceAsSeller: balanceAsSeller ? balanceAsSeller['balance'] : 0,
+      balanceAsAffiliate: balanceAsAffiliate
+        ? balanceAsAffiliate['balance']
+        : 0,
     };
   }
 }
