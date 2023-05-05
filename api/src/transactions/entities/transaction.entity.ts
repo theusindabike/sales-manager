@@ -49,6 +49,11 @@ export class Transaction {
   })
   sellerName: string;
 
+  public static of(params: Partial<Transaction>): Transaction {
+    const transaction = new Transaction();
+    return Object.assign(transaction, params);
+  }
+
   constructor(
     id?: number,
     type?: TransactionType,

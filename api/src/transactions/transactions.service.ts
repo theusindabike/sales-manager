@@ -2,16 +2,14 @@ import { Inject, Injectable } from '@nestjs/common';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { UpdateTransactionDto } from './dto/update-transaction.dto';
 import { Transaction } from './entities/transaction.entity';
-import { Repository } from 'typeorm';
-import * as fs from 'fs';
 import { InjectRepository } from '@nestjs/typeorm';
+import { TransactionRepository } from './repository/transactions.repository';
 
 @Injectable()
 export class TransactionsService {
   constructor(
-    // @Inject('TRANSACTION_REPOSITORY')
-    @InjectRepository(Transaction)
-    private readonly transactionRepository: Repository<Transaction>,
+    @Inject(TransactionRepository)
+    private readonly transactionRepository: TransactionRepository, // private readonly transactionRepository: Repository<Transaction>,
   ) {}
 
   create(createTransactionDto: CreateTransactionDto) {
@@ -34,6 +32,12 @@ export class TransactionsService {
 
   remove(id: number) {
     return `This action removes a #${id} transaction`;
+  }
+
+  findBy(sellerName: string) {
+    return this.transactionRepository.findAndCountBy({
+      sellerName: sellerName,
+    });
   }
 
   async ingestSalesFile(file: Express.Multer.File): Promise<Transaction[]> {
@@ -84,5 +88,18 @@ export class TransactionsService {
     await this.transactionRepository.insert(transactions);
 
     return transactions;
+  }
+
+  getBalance(name: string): any {
+    const balanceAsSeller = this.transactionRepository.getSellerBalance(name);
+
+    const balanceAsAffiliate =
+      this.transactionRepository.getSellerBalance(name);
+
+    return {
+      name: name,
+      balanceAsSeller: balanceAsSeller['balance'],
+      balanceAsAffiliate: balanceAsAffiliate['balance'],
+    };
   }
 }

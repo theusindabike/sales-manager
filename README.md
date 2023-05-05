@@ -6,11 +6,17 @@
 - React
 - Postgres
 
+
 ### First Run:
 
 1. 
 
+### Assumptions 
+1. A Seller could not be an Affiliate and vice versa
+
 ### Next steps:
+- Fix value parse to consider cents
+- Implement Pagination 
 - When e2e testing: replace real database to a memory one like pg-mem 
 - Replace sales_test.txt file for on the fly generated one at e2e tests (maybe multer.diskStorage).
 - Improve the upload -> read in memory -> save in db approach. Maybe change to save in some storage to then insert in db (maybe multer.diskStorage).
