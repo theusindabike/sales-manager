@@ -37,11 +37,6 @@ export class TransactionsService {
   }
 
   async ingestSalesFile(file: Express.Multer.File): Promise<Transaction[]> {
-    //const filePath = '/home/node/api/src/assets/sales_test.txt';
-    // const filePath =
-    //   '/home/matheus/Downloads/desafio-programacao-fullstack-1.2.0/sales_test.txt';
-
-    //const data = fs.readFileSync(filePath, 'utf8');
     const fieldsSchema = [
       { name: 'type', startsAt: 0, endsAt: 1 },
       { name: 'date', startsAt: 1, endsAt: 26 },
@@ -55,35 +50,39 @@ export class TransactionsService {
     }
 
     const allFileLines = Buffer.from(file.buffer).toString('utf-8');
-
     const linesArray = allFileLines.split('\n');
 
-    const parsedTransactions = linesArray.map((line) => {
-      const row = {};
+    const parsedTransactions = linesArray
+      .filter((line) => line.length > 0)
+      .map((line) => {
+        const row = {};
 
-      fieldsSchema.forEach(({ name, startsAt, endsAt }) => {
-        row[name] = line.substring(startsAt, endsAt).trim();
+        fieldsSchema.forEach(({ name, startsAt, endsAt }) => {
+          row[name] = line.substring(startsAt, endsAt).trim();
+        });
+
+        if (
+          !row['type'] ||
+          !row['date'] ||
+          !row['productDescription'] ||
+          !row['value'] ||
+          !row['sellerName']
+        ) {
+          throw new Error('Missing field in line: ' + line);
+        }
+
+        return new Transaction(
+          null,
+          parseInt(row['type']),
+          new Date(row['date']),
+          row['productDescription'],
+          parseFloat(row['value']),
+          row['sellerName'],
+        );
       });
+    const transactions = this.transactionRepository.create(parsedTransactions);
+    await this.transactionRepository.insert(transactions);
 
-      if (
-        !row['type'] ||
-        !row['date'] ||
-        !row['productDescription'] ||
-        !row['value'] ||
-        !row['sellerName']
-      ) {
-        throw new Error('Missing field in line: ' + line);
-      }
-
-      return new Transaction(
-        null,
-        parseInt(row['type']),
-        new Date(row['date']),
-        row['productDescription'],
-        parseFloat(row['value']),
-        row['sellerName'],
-      );
-    });
-    return parsedTransactions;
+    return transactions;
   }
 }

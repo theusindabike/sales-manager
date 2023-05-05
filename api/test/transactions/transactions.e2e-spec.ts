@@ -48,10 +48,13 @@ describe('TransactionController (e2e)', () => {
     expect(data.body).toEqual({ id: '1', ...transaction });
   });
 
-  it('/transactions/ingestTransactionFile (POST)', () => {
-    return request(app.getHttpServer())
+  it('/transactions/ingestTransactionFile (POST)', async () => {
+    request(app.getHttpServer())
       .post('/transactions/upload')
-      .attach('file', './src/assets/sales_test.txt')
+      .attach('file', './test/transactions/assets/sales_test.txt')
       .expect(201);
+
+    // const data = await request(app.getHttpServer()).get('/transactions');
+    // expect(data.body.length).toEqual(3);
   });
 });

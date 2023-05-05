@@ -10,6 +10,7 @@ import {
   UploadedFile,
   ParseFilePipeBuilder,
   HttpStatus,
+  Res,
 } from '@nestjs/common';
 import { TransactionsService } from './transactions.service';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
@@ -17,6 +18,7 @@ import { UpdateTransactionDto } from './dto/update-transaction.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { TransactionFileDto } from './dto/transaction-file.dto';
 import { ApiBody, ApiConsumes } from '@nestjs/swagger';
+import { Response } from 'express';
 
 @Controller('transactions')
 export class TransactionsController {
@@ -58,6 +60,7 @@ export class TransactionsController {
   @UseInterceptors(FileInterceptor('file'))
   @Post('upload')
   uploadTransactionFile(
+    @Res() response: Response,
     @Body() body: TransactionFileDto,
     @UploadedFile(
       new ParseFilePipeBuilder()
@@ -69,11 +72,7 @@ export class TransactionsController {
     )
     file: Express.Multer.File,
   ) {
-    this.transactionsService.ingestSalesFile(file);
-    return { status: HttpStatus.CREATED, content: 'vai dar tudo certo' };
-    // return {
-    //   body,
-    //   file: file.buffer.toString(),
-    // };
+    const transactions = this.transactionsService.ingestSalesFile(file);
+    response.status(HttpStatus.CREATED).json({ ...transactions });
   }
 }
