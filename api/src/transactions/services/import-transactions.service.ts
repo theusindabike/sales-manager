@@ -51,7 +51,7 @@ export class ImportTransactionsService
             type: parseInt(row['type']),
             date: new Date(row['date']),
             productDescription: row['productDescription'],
-            value: parseFloat(row['value']),
+            value: +(parseFloat(row['value']) / 100).toFixed(2),
             sellerName: row['sellerName'],
           });
 

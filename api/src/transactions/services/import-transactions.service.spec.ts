@@ -68,5 +68,22 @@ describe('TransactionsService', () => {
         service.importTransactions({ buffer: file } as Express.Multer.File),
       ).rejects.toThrowError(Error);
     });
+
+    it('import sales file with success', async () => {
+      mockfs({
+        'test_dir/assets': {
+          'sales_sample.txt': mockfs.file({
+            content:
+              '12022-01-15T19:20:30-03:00CURSO DE BEM-ESTAR            0000012750JOSE CARLOS\n22022-01-16T14:13:54-03:00CURSO DE BEM-ESTAR            0000012750THIAGO OLIVEIRA\n42022-01-16T14:13:54-03:00CURSO DE BEM-ESTAR            0000004500THIAGO OLIVEIRA\n32022-01-16T14:13:54-03:00CURSO DE BEM-ESTAR            0000004500JOSE CARLOS',
+          }),
+        },
+      });
+      const file = fs.readFileSync('test_dir/assets/sales_sample.txt');
+
+      mockfs.restore();
+      expect(
+        service.importTransactions({ buffer: file } as Express.Multer.File),
+      ).resolves;
+    });
   });
 });

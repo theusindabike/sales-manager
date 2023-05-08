@@ -30,7 +30,7 @@ const transactions = [
     TransactionType.COMMISSION_PAID,
     new Date('2022-01-16T14:13:54-03:00'),
     'DOMINANDO INVESTIMENTOS',
-    15,
+    15.25,
     SELLER_1,
   ),
   new Transaction(
@@ -38,7 +38,7 @@ const transactions = [
     TransactionType.COMMISSION_RECIEVED,
     new Date('2022-01-16T14:13:54-03:00'),
     'DOMINANDO INVESTIMENTOS',
-    15,
+    15.25,
     AFFILIATE_1,
   ),
 ];
@@ -51,14 +51,9 @@ describe('TransactionsService', () => {
       provide: TransactionRepository,
       useValue: {
         find: jest.fn().mockResolvedValue(transactions),
-        findOneOrFail: jest.fn().mockResolvedValue(transactionOne),
         create: jest.fn().mockReturnValue(transactionOne),
-        save: jest.fn(),
-        insert: jest.fn().mockResolvedValue(true),
-        update: jest.fn().mockResolvedValue(true),
-        delete: jest.fn().mockResolvedValue(true),
-        getSellerBalance: jest.fn().mockReturnValue({ balance: 85 }),
-        getAffiliateBalance: jest.fn().mockReturnValue({ balance: 65 }),
+        getSellerBalance: jest.fn().mockReturnValue({ balance: 100 - 15.25 }),
+        getAffiliateBalance: jest.fn().mockReturnValue({ balance: 50 + 15.25 }),
       },
     };
     const module: TestingModule = await Test.createTestingModule({
@@ -76,8 +71,17 @@ describe('TransactionsService', () => {
     const result = await service.getBalance(SELLER_1);
     expect(result).toEqual({
       name: SELLER_1,
-      balanceAsSeller: 85,
-      balanceAsAffiliate: 65,
+      balanceAsSeller: 84.75,
+      balanceAsAffiliate: expect.any(Number),
+    });
+  });
+
+  it('get affiliate transactions', async () => {
+    const result = await service.getBalance(SELLER_1);
+    expect(result).toEqual({
+      name: SELLER_1,
+      balanceAsSeller: expect.any(Number),
+      balanceAsAffiliate: 65.25,
     });
   });
 });

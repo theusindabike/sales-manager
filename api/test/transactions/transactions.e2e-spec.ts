@@ -58,7 +58,7 @@ describe('TransactionController (e2e)', () => {
       .expect(200);
     expect(data.body).toEqual({
       name: SELLER_NAME_1,
-      balanceAsSeller: 21000,
+      balanceAsSeller: 210,
       balanceAsAffiliate: 0,
     });
   });
