@@ -19,4 +19,4 @@ COPY --chown=node:node . /home/node/web
 
 RUN chown node:node /home/node/web
 
-CMD ["npm", "run", "dev"]
+CMD ["npm", "start"]
