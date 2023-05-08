@@ -1,20 +1,22 @@
 # build stage
-FROM node:20-bullseye-slim as BUILD
+FROM node:18.16.0-bullseye-slim as BUILD
 
-RUN apt-get update && apt-get install -y --no-install-recommends dumb-init
-WORKDIR /usr/src/web
-COPY package.json /usr/src/web/
+USER node
+WORKDIR /home/node/web
 
-RUN npm install
-CMD "npm" "start"
+COPY package*.json /home/node/web
+RUN npm ci
 
 # final stage
-FROM node:20-bullseye-slim
+FROM node:18.16.0-bullseye-slim
 
-COPY --from=build /usr/bin/dumb-init /usr/bin/dumb-init
-USER node
-WORKDIR /usr/src/web
+WORKDIR /home/node/web
 
-COPY --chown=node:node --from=build /usr/src/web/node_modules /usr/src/web/node_modules
-COPY --chown=node:node . /usr/src/web
+RUN apt-get update && apt-get install -y procps && rm -rf /var/lib/apt/lists/*
 
+COPY --chown=node:node --from=build /home/node/web/node_modules /home/node/web/node_modules
+COPY --chown=node:node . /home/node/web
+
+RUN chown node:node /home/node/web
+
+CMD ["npm", "run", "dev"]
