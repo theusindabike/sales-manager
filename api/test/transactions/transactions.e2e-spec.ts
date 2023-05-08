@@ -2,11 +2,8 @@ import * as request from 'supertest';
 import { Test } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import { DataSource } from 'typeorm';
-
-import { AppModule } from '../../src/app.module';
-import { TransactionType } from '../../src/transactions/entities/transaction.entity';
-
 import { setupDatabase } from '../setup-database';
+import { AppModule } from '../../src/app.module';
 import { TransactionRepository } from '../../src/transactions/repository/transactions.repository';
 
 describe('TransactionController (e2e)', () => {
@@ -14,23 +11,7 @@ describe('TransactionController (e2e)', () => {
   let dataSource: DataSource;
   let transactionRepository: TransactionRepository;
 
-  const SELLER_NAME_1 = 'Seller name 1';
-  const TRANSACTION_1 = {
-    type: TransactionType.PRODUCER_SALE,
-    date: '2022-01-16T14:13:54-03:00',
-    productDescription: 'Product Description 1',
-    value: 333,
-    sellerName: SELLER_NAME_1,
-  };
-
-  const SELLER_NAME_2 = 'Affiliate name 1';
-  const TRANSACTION_2 = {
-    type: TransactionType.AFFILIATE_SALE,
-    date: '2022-01-16T14:13:54-03:00',
-    productDescription: 'Product Description 2',
-    value: 666,
-    sellerName: SELLER_NAME_2,
-  };
+  const SELLER_NAME_1 = 'JOSE CARLOS';
 
   beforeAll(async () => {
     dataSource = await setupDatabase();
@@ -51,8 +32,8 @@ describe('TransactionController (e2e)', () => {
 
   beforeEach(async () => {
     await request(app.getHttpServer())
-      .post('/transactions')
-      .send(TRANSACTION_1)
+      .post('/transactions/upload')
+      .attach('file', './test/transactions/assets/sales_test.txt')
       .expect(201);
   });
 
@@ -66,27 +47,9 @@ describe('TransactionController (e2e)', () => {
     await app.close();
   });
 
-  it('/ (GET)', () => {
-    return request(app.getHttpServer()).get('/').expect(200);
-  });
-
-  it('/transactions (POST)', async () => {
-    const data = await request(app.getHttpServer())
-      .post('/transactions')
-      .send(TRANSACTION_2)
-      .expect(201);
-
-    expect(data.body).toEqual({ id: expect.any(String), ...TRANSACTION_2 });
-  });
-
-  it('/transactions/ingestTransactionFile (POST)', async () => {
-    await request(app.getHttpServer())
-      .post('/transactions/upload')
-      .attach('file', './test/transactions/assets/sales_test.txt')
-      .expect(201);
-
+  it('/transactions/upload (POST)', async () => {
     const data = await request(app.getHttpServer()).get('/transactions');
-    expect(data.body.length).toEqual(4);
+    expect(data.body.length).toEqual(20);
   });
 
   it('/transactions/balance (GET)', async () => {
@@ -95,7 +58,7 @@ describe('TransactionController (e2e)', () => {
       .expect(200);
     expect(data.body).toEqual({
       name: SELLER_NAME_1,
-      balanceAsSeller: 333,
+      balanceAsSeller: 21000,
       balanceAsAffiliate: 0,
     });
   });
@@ -105,13 +68,6 @@ describe('TransactionController (e2e)', () => {
       .get('/transactions?sellerName=' + encodeURI(SELLER_NAME_1))
       .expect(200);
 
-    expect(data.body[0]).toEqual({
-      id: expect.any(Number),
-      type: TRANSACTION_1.type,
-      date: expect.any(String),
-      productDescription: TRANSACTION_1.productDescription,
-      value: TRANSACTION_1.value,
-      sellerName: TRANSACTION_1.sellerName,
-    });
+    expect(data.body[0].length).toEqual(3);
   });
 });

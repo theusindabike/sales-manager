@@ -1,7 +1,3 @@
-// export class TransactionFileDto {
-//   name: string;
-// }
-
 import { ApiProperty } from '@nestjs/swagger';
 
 export class TransactionFileDto {

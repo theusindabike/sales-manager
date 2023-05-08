@@ -11,29 +11,35 @@ import {
   Query,
 } from '@nestjs/common';
 import { TransactionsService } from './transactions.service';
-import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { TransactionFileDto } from './dto/transaction-file.dto';
-import { ApiBody, ApiConsumes } from '@nestjs/swagger';
+import { ApiBody, ApiConsumes, ApiQuery } from '@nestjs/swagger';
 import { Response } from 'express';
+import { ImportTransactionsService } from './services/import-transactions.service';
 
+const FILE_SIZE = 10;
 @Controller('transactions')
 export class TransactionsController {
-  constructor(private readonly transactionsService: TransactionsService) {}
+  constructor(
+    private readonly importTransactionsService: ImportTransactionsService,
+    private readonly transactionsService: TransactionsService,
+  ) {}
 
-  @Post()
-  create(@Body() createTransactionDto: CreateTransactionDto) {
-    return this.transactionsService.create(createTransactionDto);
-  }
-
+  // @Get()
+  // async findAll() {
+  //   return await this.transactionsService.findAll();
+  // }
+  @ApiQuery({
+    name: 'sellerName',
+    type: String,
+    description: 'Seller Name. Optional',
+    required: false,
+  })
   @Get()
-  async findAll() {
-    return await this.transactionsService.findAll();
-  }
-
-  @Get()
-  async findAllBySellerName(@Query('sellerName') sellerName: string) {
-    return await this.transactionsService.findAllBySellerName(sellerName);
+  async findBySellerName(@Query('sellerName') sellerName?: string) {
+    return sellerName != null
+      ? await this.transactionsService.findBySellerName(sellerName)
+      : await this.transactionsService.findAll();
   }
 
   @ApiConsumes('multipart/form-data')
@@ -51,12 +57,13 @@ export class TransactionsController {
         .addFileTypeValidator({
           fileType: 'text',
         })
-        .addMaxSizeValidator({ maxSize: 1024 * 1024 * 10 })
+        .addMaxSizeValidator({ maxSize: 1024 * 1024 * FILE_SIZE })
         .build(),
     )
     file: Express.Multer.File,
   ) {
-    const transactions = this.transactionsService.ingestSalesFile(file);
+    const transactions =
+      this.importTransactionsService.importTransactions(file);
     response.status(HttpStatus.CREATED).json({ ...transactions });
   }
 

@@ -54,6 +54,7 @@ describe('TransactionsService', () => {
         findOneOrFail: jest.fn().mockResolvedValue(transactionOne),
         create: jest.fn().mockReturnValue(transactionOne),
         save: jest.fn(),
+        insert: jest.fn().mockResolvedValue(true),
         update: jest.fn().mockResolvedValue(true),
         delete: jest.fn().mockResolvedValue(true),
         getSellerBalance: jest.fn().mockReturnValue({ balance: 85 }),

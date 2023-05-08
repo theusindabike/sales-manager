@@ -1,22 +1,19 @@
-import { ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 import { TransactionType } from '../entities/transaction.entity';
 
 export class CreateTransactionDto {
-  @ApiPropertyOptional()
-  id: number;
-
-  @ApiPropertyOptional()
+  @ApiProperty()
   type: TransactionType;
 
-  @ApiPropertyOptional()
+  @ApiProperty()
   date: Date;
 
-  @ApiPropertyOptional()
+  @ApiProperty()
   productDescription: string;
 
-  @ApiPropertyOptional()
+  @ApiProperty()
   value: number;
 
-  @ApiPropertyOptional()
+  @ApiProperty()
   sellerName: string;
 }
