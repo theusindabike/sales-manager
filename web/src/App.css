@@ -71,7 +71,7 @@ nav .nav-items {
 }
 
 .grid-3 {
-  grid-template-columns: 1fr 4fr 4fr;  
+  grid-template-columns: 4fr 2fr 2fr;  
 }
 
 .grid-5 {
@@ -159,4 +159,11 @@ button {
   outline: none;
   background-color: #15925c;
   color: #fff;
+}
+
+button:disabled,
+button[disabled]{
+  border: 1px solid #999999;
+  background-color: #cccccc;
+  color: #666666;
 }

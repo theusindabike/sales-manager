@@ -1,6 +1,6 @@
 import React from 'react';
 import useTranscationsService from '../services/useTransactionsService';
-import Loader from './Loader';
+import Loader from '../components/Loader';
 import { format } from 'date-fns';
 import { TransactionType } from '../types/Transaction';
 

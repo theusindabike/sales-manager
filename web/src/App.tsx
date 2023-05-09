@@ -1,11 +1,11 @@
 import React, { Component, Suspense } from 'react';
 import './App.css';
-import TransactionFileUploader from './components/TransactionFileUploader';
+import TransactionFileUploader from './pages/TransactionFileUploader';
 import NavBar from './components/NavBar';
 import { Route, Routes } from 'react-router-dom';
 import NoMatch from './components/Errors';
-import TranscationsList from './components/TransactionsList';
-import TransactionsBalance from './components/TransactionsBalance';
+import TranscationsList from './pages/TransactionsList';
+import TransactionsBalance from './pages/TransactionsBalance';
 
 class App extends Component {
   render() {

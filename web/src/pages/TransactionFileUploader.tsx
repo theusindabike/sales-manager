@@ -1,6 +1,6 @@
 import { ChangeEvent, useState } from 'react';
 import useUploadTransactionsService from '../services/useUploadTransactionsService';
-import Loader from './Loader';
+import Loader from '../components/Loader';
 
 
 function TransactionFileUploader() {
