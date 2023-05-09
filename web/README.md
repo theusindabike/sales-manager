@@ -1,16 +1,6 @@
-# Sales Manager
-
-### Stack:
-- Docker compose
-- React
+# Sales Manager Web Client
 
 ### First Run:
 
 1. 
 
-
-### Key-Approachs
-
-### Next steps:
-- Filter by Seller and shows balance
-- Shows backend errors

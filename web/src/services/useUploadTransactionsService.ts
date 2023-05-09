@@ -1,7 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Service } from '../types/Service';
-import { Transaction } from '../types/Transaction';
-import useTransactionService from './useTransactionsService';
 
 export type UploadTransactionsFile = FormData;
 

@@ -27,6 +27,7 @@ function TransactionFileUploader() {
     };
     return (
         <div className='container'>
+            <h2>Upload Page</h2>
             <p>
                 <strong>Select a file:</strong>
             </p>
@@ -35,11 +36,13 @@ function TransactionFileUploader() {
 
             {service.status === 'loading' && (
                 <div className="loader-container">
-                <Loader />
+                    <Loader />
                 </div>
             )}
             {service.status === 'loaded' && (
-                <div>Your file was uploaded.</div>
+                <p>
+                    <strong>Your file was uploaded. Please refresh the page.</strong>
+                </p>
             )}
             {service.status === 'error' && (
                 <div>

@@ -18,7 +18,8 @@
 2. mock-fs for tests with real text files 
 
 ### Next steps:
-- Fix value parse to consider cents
+### API: 
+- Deal with duplicated Transactions (e.g. upload the same file multiple times)
 - Multer.File configuration or even use another approach
 - Replace sales_test.txt file for on the fly generated one at e2e tests (maybe multer.diskStorage).
 - Improve parse validation
@@ -26,3 +27,7 @@
 - Improve the upload -> read in memory -> save in db approach. Maybe change to save in some storage to then insert in db (maybe multer.diskStorage).
 - Improve the Express.Multer.File usage to prevent malicious code when uploading files
 - Mult-file upload
+
+### Web
+- Filter by Seller and shows balance
+- Shows backend errors
