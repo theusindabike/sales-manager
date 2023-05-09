@@ -55,7 +55,7 @@ describe('TransactionController (e2e)', () => {
   describe('Balance (e2e)', () => {
     it('/transactions/balance (GET)', async () => {
       const data = await request(app.getHttpServer())
-        .get('/transactions/balance?sellerName=' + encodeURI(sellerName_1))
+        .get(`/transactions/balance?sellerName=${encodeURI(sellerName_1)}`)
         .expect(200);
       expect(data.body).toEqual({
         name: sellerName_1,
@@ -68,7 +68,7 @@ describe('TransactionController (e2e)', () => {
   describe('Transactions (e2e)', () => {
     it('/transactions?sellerName=<?> (GET)', async () => {
       const data = await request(app.getHttpServer())
-        .get('/transactions?sellerName=' + encodeURI(sellerName_1))
+        .get(`/transactions?sellerName=${encodeURI(sellerName_1)}`)
         .expect(200);
 
       expect(data.body.length).toEqual(3);

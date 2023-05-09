@@ -18,6 +18,7 @@
 
 ### Next steps:
 ### API: 
+- Always return an object 
 - Deal with duplicated Transactions (e.g. upload the same file multiple times)
 - Multer.File configuration or even use another approach
 - Replace sales_test.txt file for on the fly generated one at e2e tests (maybe multer.diskStorage).

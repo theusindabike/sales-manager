@@ -45,4 +45,14 @@ export class RawTransactionDto {
     const rawTransactionDto = new RawTransactionDto();
     return Object.assign(rawTransactionDto, params);
   }
+
+  public static fromRow(row: any) {
+    return RawTransactionDto.of({
+      type: parseInt(row['type']),
+      date: new Date(row['date']),
+      productDescription: row['productDescription'],
+      value: +(parseFloat(row['value']) / 100).toFixed(2),
+      sellerName: row['sellerName'],
+    });
+  }
 }
