@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { Transaction } from './../entities/transaction.entity';
 import { RawTransactionDto } from './../dto/raw-transaction.dto';
 import { ImportTransactionsServiceInterface } from './../import-transactions.interface';
@@ -21,7 +21,7 @@ export class ImportTransactionsService
     ];
 
     if (!file || !file.buffer) {
-      throw new Error('Somethin went wrong: File not found');
+      throw new BadRequestException('Somethin went wrong: File not found');
     }
 
     const allFileLines = Buffer.from(file.buffer).toString('utf-8');
@@ -44,7 +44,9 @@ export class ImportTransactionsService
             !row['value'] ||
             !row['sellerName']
           ) {
-            throw new Error('Missing field in line: ' + line);
+            throw new BadRequestException(
+              `Missing field error. Maybe the uploaded file have some iconsistence at: "${line}"`,
+            );
           }
 
           const t = RawTransactionDto.of({
@@ -71,7 +73,9 @@ export class ImportTransactionsService
     try {
       await validateOrReject(input);
     } catch (errors) {
-      throw new Error(errors.toString());
+      throw new BadRequestException(
+        `One on more fields is not valid. Details: ${errors.toString()}`,
+      );
     }
   }
 }

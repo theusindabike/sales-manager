@@ -28,8 +28,9 @@
 - Mult-file upload
 - Remove duplicated mock code in tests files
 - Setup nest-alias for deal with importing files
+- Create custom exceptions
+- Improve exceptions messages to became user friendly.
 
 ### Web
-- Shows backend errors
 - Balance Page: Replace free input text by a drop-down one
 - Add Material UI lib

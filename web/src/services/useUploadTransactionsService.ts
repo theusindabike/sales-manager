@@ -17,6 +17,10 @@ const useUploadTransactionsService = () => {
       })
       .then((response) => response.json())
       .then(response => {
+        if(response.statusCode && 
+          (response.statusCode >= 300 || response.statusCode < 200)) {
+          throw new Error(response.message);
+        }
         setService({ status: 'loaded', payload: response });
         resolve(response);
       })    

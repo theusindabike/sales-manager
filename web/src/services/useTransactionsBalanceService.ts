@@ -15,8 +15,8 @@ const useTransactionsBalanceService = () => {
          }))
         .then((response) => response.json())
         .then(response => {
-            setService({ status: 'loaded', payload: response });
-            resolve(response);
+          setService({ status: 'loaded', payload: response });
+          resolve(response);
         })    
         .catch(error => {
             setService({ status: 'error', error });

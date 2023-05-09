@@ -43,7 +43,7 @@ const TranscationsList: React.FC<{}> = () => {
           </div>
         ))}
         {service.status === 'error' && (
-          <div>Error, something went wrong. Try again later</div>
+          <div>Error, something went wrong.</div>
         )}
         {service.status === 'loaded' && service.payload.length === 0 && (
           <div>No transactions were found.</div>

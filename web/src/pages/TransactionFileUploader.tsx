@@ -46,7 +46,7 @@ function TransactionFileUploader() {
             )}
             {service.status === 'error' && (
                 <div>
-                    Somenthing went wrong. Try again later.
+                    Somenthing went wrong. {service.error.toString()}
                 </div>
             )}
         </div>
