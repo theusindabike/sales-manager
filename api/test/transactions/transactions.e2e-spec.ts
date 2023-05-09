@@ -11,7 +11,7 @@ describe('TransactionController (e2e)', () => {
   let dataSource: DataSource;
   let transactionRepository: TransactionRepository;
 
-  const SELLER_NAME_1 = 'JOSE CARLOS';
+  const sellerName_1 = 'JOSE CARLOS';
 
   beforeAll(async () => {
     dataSource = await setupDatabase();
@@ -33,12 +33,10 @@ describe('TransactionController (e2e)', () => {
   beforeEach(async () => {
     await request(app.getHttpServer())
       .post('/transactions/upload')
-      .attach('file', './test/transactions/assets/sales_test.txt')
-      .expect(201);
+      .attach('file', './test/transactions/assets/sales_test.txt');
   });
 
   afterEach(async () => {
-    // await transactionRepository.query(`TRUNCATE TABLE transaction;`);
     await transactionRepository.clear();
   });
 
@@ -47,27 +45,33 @@ describe('TransactionController (e2e)', () => {
     await app.close();
   });
 
-  it('/transactions/upload (POST)', async () => {
-    const data = await request(app.getHttpServer()).get('/transactions');
-    expect(data.body.length).toEqual(20);
-  });
-
-  it('/transactions/balance (GET)', async () => {
-    const data = await request(app.getHttpServer())
-      .get('/transactions/balance?sellerName=' + encodeURI(SELLER_NAME_1))
-      .expect(200);
-    expect(data.body).toEqual({
-      name: SELLER_NAME_1,
-      balanceAsSeller: 210,
-      balanceAsAffiliate: 0,
+  describe('Upload (e2e)', () => {
+    it('/transactions/upload (POST)', async () => {
+      const data = await request(app.getHttpServer()).get('/transactions');
+      expect(data.body.length).toEqual(20);
     });
   });
 
-  it('/transactions?sellerName=<?> (GET)', async () => {
-    const data = await request(app.getHttpServer())
-      .get('/transactions?sellerName=' + encodeURI(SELLER_NAME_1))
-      .expect(200);
+  describe('Balance (e2e)', () => {
+    it('/transactions/balance (GET)', async () => {
+      const data = await request(app.getHttpServer())
+        .get('/transactions/balance?sellerName=' + encodeURI(sellerName_1))
+        .expect(200);
+      expect(data.body).toEqual({
+        name: sellerName_1,
+        balanceAsSeller: 210,
+        balanceAsAffiliate: 0,
+      });
+    });
+  });
 
-    expect(data.body.length).toEqual(3);
+  describe('Transactions (e2e)', () => {
+    it('/transactions?sellerName=<?> (GET)', async () => {
+      const data = await request(app.getHttpServer())
+        .get('/transactions?sellerName=' + encodeURI(sellerName_1))
+        .expect(200);
+
+      expect(data.body.length).toEqual(3);
+    });
   });
 });

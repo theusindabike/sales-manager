@@ -1,5 +1,5 @@
 export interface TransactionBalance {
-    name: any;
+    name: string;
     balanceAsSeller: number;
     balanceAsAffiliate: number;     
 }

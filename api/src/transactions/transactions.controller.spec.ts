@@ -5,49 +5,46 @@ import { ImportTransactionsService } from './services/import-transactions.servic
 import { Transaction, TransactionType } from './entities/transaction.entity';
 import { TransactionRepository } from './repository/transactions.repository';
 
-const SELLER_1 = 'JOSE CARLOS';
-const AFFILIATE_1 = 'MARIA CANDIDA';
-
-const transactionOne = new Transaction(
-  null,
-  TransactionType.PRODUCER_SALE,
-  new Date('2022-01-15T19:20:30-03:00'),
-  'CURSO DE BEM-ESTAR',
-  100,
-  SELLER_1,
-);
-
-const transactionTwo = new Transaction(
-  null,
-  TransactionType.COMMISSION_PAID,
-  new Date('2022-01-16T14:13:54-03:00'),
-  'DOMINANDO INVESTIMENTOS',
-  15,
-  SELLER_1,
-);
-
-const transactions = [
-  transactionOne,
-  new Transaction(
-    null,
-    TransactionType.AFFILIATE_SALE,
-    new Date('2021-12-03T11:46:02-03:00'),
-    'DOMINANDO INVESTIMENTOS',
-    50,
-    AFFILIATE_1,
-  ),
-  transactionTwo,
-  new Transaction(
-    null,
-    TransactionType.COMMISSION_RECIEVED,
-    new Date('2022-01-16T14:13:54-03:00'),
-    'DOMINANDO INVESTIMENTOS',
-    15,
-    AFFILIATE_1,
-  ),
-];
 describe('TransactionsController', () => {
+  const seller_1 = 'JOSE CARLOS';
+  const affiliate_1 = 'MARIA CANDIDA';
+
+  const transactionOne = Transaction.of({
+    type: TransactionType.PRODUCER_SALE,
+    date: new Date('2022-01-15T19:20:30-03:00'),
+    productDescription: 'CURSO DE BEM-ESTAR',
+    value: 100,
+    sellerName: seller_1,
+  });
+
+  const transactionTwo = Transaction.of({
+    type: TransactionType.COMMISSION_PAID,
+    date: new Date('2022-01-16T14:13:54-03:00'),
+    productDescription: 'DOMINANDO INVESTIMENTOS',
+    value: 15,
+    sellerName: seller_1,
+  });
+
+  const transactions = [
+    transactionOne,
+    Transaction.of({
+      type: TransactionType.AFFILIATE_SALE,
+      date: new Date('2021-12-03T11:46:02-03:00'),
+      productDescription: 'DOMINANDO INVESTIMENTOS',
+      value: 50,
+      sellerName: affiliate_1,
+    }),
+    transactionTwo,
+    Transaction.of({
+      type: TransactionType.COMMISSION_RECIEVED,
+      date: new Date('2022-01-16T14:13:54-03:00'),
+      productDescription: 'DOMINANDO INVESTIMENTOS',
+      value: 15,
+      sellerName: affiliate_1,
+    }),
+  ];
   let controller: TransactionsController;
+  let transactionService: TransactionsService;
 
   beforeEach(async () => {
     const transactionRepositoryMockProvider = {
@@ -58,26 +55,21 @@ describe('TransactionsController', () => {
             return Transaction.of(t);
           }),
         ),
-        findAndCountBy: jest
-          .fn()
-          .mockResolvedValue([
-            Transaction.of(transactionOne),
-            Transaction.of(transactionTwo),
-          ]),
-        getSellerBalance: jest.fn().mockReturnValue({ balance: 85 }),
-        getAffiliateBalance: jest.fn().mockReturnValue({ balance: 65 }),
+        getSellerBalanceByName: jest.fn().mockReturnValue({ balance: 85 }),
+        getAffiliateBalanceByName: jest.fn().mockReturnValue({ balance: 65 }),
       },
     };
     const module: TestingModule = await Test.createTestingModule({
       controllers: [TransactionsController],
       providers: [
         TransactionsService,
-        { provide: ImportTransactionsService, useValue: {} },
         transactionRepositoryMockProvider,
+        { provide: ImportTransactionsService, useValue: {} },
       ],
     }).compile();
 
     controller = module.get<TransactionsController>(TransactionsController);
+    transactionService = module.get<TransactionsService>(TransactionsService);
   });
 
   it('should be defined', () => {
@@ -85,15 +77,21 @@ describe('TransactionsController', () => {
   });
 
   it('findTransactions with sellerName', () => {
+    const result = [
+      Transaction.of(transactionOne),
+      Transaction.of(transactionTwo),
+    ];
+    jest
+      .spyOn(transactionService, 'findBySellerName')
+      .mockResolvedValueOnce(result);
     controller.findBySellerName();
-    expect(controller.findBySellerName(SELLER_1)).resolves.toEqual([
-      transactionOne,
-      transactionTwo,
-    ]);
+    expect(controller.findBySellerName(seller_1)).resolves.toEqual(result);
   });
 
   it('findTransactions without sellerName', () => {
+    const result = [...transactions];
+    jest.spyOn(transactionService, 'findAll').mockResolvedValueOnce(result);
     controller.findBySellerName();
-    expect(controller.findBySellerName()).resolves.toEqual(transactions);
+    expect(controller.findBySellerName()).resolves.toEqual(result);
   });
 });

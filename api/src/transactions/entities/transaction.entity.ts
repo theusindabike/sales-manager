@@ -10,7 +10,7 @@ export enum TransactionType {
 @Entity()
 export class Transaction {
   @PrimaryGeneratedColumn({
-        type: 'bigint',
+    type: 'bigint',
   })
   id: number;
 
@@ -69,13 +69,4 @@ export class Transaction {
     this.value = value || null;
     this.sellerName = sellerName || '';
   }
-
-  // constructor(t: Partial<Transaction>) {
-  //   this.id = t.id || null;
-  //   this.type = t.type || null;
-  //   this.date = t.date || null;
-  //   this.productDescription = t.productDescription || '';
-  //   this.value = t.value || null;
-  //   this.sellerName = t.sellerName || '';
-  // }
 }

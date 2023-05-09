@@ -3,7 +3,6 @@ import Loader from './Loader';
 import useTransactionsBalanceService from '../services/useTransactionsBalanceService';
 import { TransactionBalance } from '../types/TransactionBalance';
 
-
 const TransactionsBalance: React.FC<{}> = () => {
   const initialTransactionBalanceState: TransactionBalance = {
     name: '',
@@ -15,7 +14,7 @@ const TransactionsBalance: React.FC<{}> = () => {
     initialTransactionBalanceState
   );
 
-  const { service, transactionsBalance } = useTransactionsBalanceService();
+  const { service, getTransactionsBalance } = useTransactionsBalanceService();
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.persist();
@@ -27,7 +26,7 @@ const TransactionsBalance: React.FC<{}> = () => {
 
   const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    transactionsBalance(balance.name);
+    getTransactionsBalance(balance.name);
   };
   return (
     <>
@@ -43,7 +42,7 @@ const TransactionsBalance: React.FC<{}> = () => {
             onChange={handleChange}
           />          
           <button type="submit">Load Balance</button>
-          </div>
+        </div>
         </form>
         <div className="grid-3">
           <span>

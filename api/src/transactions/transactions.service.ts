@@ -2,22 +2,23 @@ import { Injectable } from '@nestjs/common';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { Transaction } from './entities/transaction.entity';
 import { TransactionRepository } from './repository/transactions.repository';
+import { BalanceDto } from './dto/balance.dto';
 
 @Injectable()
 export class TransactionsService {
   constructor(private readonly transactionRepository: TransactionRepository) {}
 
-  create(createTransactionDto: CreateTransactionDto) {
+  create(createTransactionDto: CreateTransactionDto): Promise<Transaction> {
     const newTransaction =
       this.transactionRepository.create(createTransactionDto);
     return this.transactionRepository.save(newTransaction);
   }
 
-  findAll() {
+  findAll(): Promise<Transaction[]> {
     return this.transactionRepository.find({ order: { date: 'ASC' } });
   }
 
-  findBySellerName(sellerName: string) {
+  findBySellerName(sellerName: string): Promise<Transaction[]> {
     return this.transactionRepository.find({
       where: { sellerName: sellerName },
       order: { date: 'ASC' },
@@ -32,20 +33,18 @@ export class TransactionsService {
     return t;
   }
 
-  async getBalance(name: string): Promise<any> {
-    const balanceAsSeller = await this.transactionRepository.getSellerBalance(
-      name,
-    );
+  async getBalanceByName(name: string): Promise<BalanceDto> {
+    const [sellerBalanceResult, affiliateBalanceResult] = await Promise.all([
+      this.transactionRepository.getSellerBalanceByName(name),
+      this.transactionRepository.getAffiliateBalanceByName(name),
+    ]);
 
-    const balanceAsAffiliate =
-      await this.transactionRepository.getAffiliateBalance(name);
-
-    return {
+    return BalanceDto.of({
       name: name,
-      balanceAsSeller: balanceAsSeller ? balanceAsSeller['balance'] : 0,
-      balanceAsAffiliate: balanceAsAffiliate
-        ? balanceAsAffiliate['balance']
+      balanceAsSeller: sellerBalanceResult ? sellerBalanceResult.balance : 0,
+      balanceAsAffiliate: affiliateBalanceResult
+        ? affiliateBalanceResult.balance
         : 0,
-    };
+    });
   }
 }

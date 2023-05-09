@@ -2,6 +2,7 @@ import { DataSource, Repository } from 'typeorm';
 import { Transaction, TransactionType } from '../entities/transaction.entity';
 import { Injectable } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';
+import { GetBalanceDto } from '../dto/balance.dto';
 
 @Injectable()
 export class TransactionRepository extends Repository<Transaction> {
@@ -9,7 +10,7 @@ export class TransactionRepository extends Repository<Transaction> {
     super(Transaction, dataSource.createEntityManager());
   }
 
-  async getSellerBalance(sellerName: string) {
+  async getSellerBalanceByName(sellerName: string): Promise<GetBalanceDto> {
     const rawResult = await this.dataSource.query(
       ' \
             SELECT \
@@ -37,7 +38,7 @@ export class TransactionRepository extends Repository<Transaction> {
     return rawResult[0];
   }
 
-  async getAffiliateBalance(sellerName: string) {
+  async getAffiliateBalanceByName(sellerName: string): Promise<GetBalanceDto> {
     const rawResult = await this.dataSource.query(
       ' \
             SELECT \

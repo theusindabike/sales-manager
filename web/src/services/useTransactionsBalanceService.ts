@@ -7,7 +7,7 @@ const useTransactionsBalanceService = () => {
     status: 'init'
   });
 
-  const transactionsBalance = (sellerName: string) => {
+  const getTransactionsBalance = (sellerName: string) => {
     setService({ status: 'loading' });
     return new Promise((resolve, reject) => {
         fetch('http://127.0.0.1:8000/transactions/balance?' + new URLSearchParams({
@@ -27,7 +27,7 @@ const useTransactionsBalanceService = () => {
 
   return {
     service,
-    transactionsBalance,
+    getTransactionsBalance,
   };
 };
 

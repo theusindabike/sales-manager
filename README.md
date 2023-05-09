@@ -7,7 +7,6 @@
 
 
 ### First Run:
-
 1. 
 
 ### Assumptions 
@@ -27,6 +26,8 @@
 - Improve the upload -> read in memory -> save in db approach. Maybe change to save in some storage to then insert in db (maybe multer.diskStorage).
 - Improve the Express.Multer.File usage to prevent malicious code when uploading files
 - Mult-file upload
+- Remove duplicated mock code in tests files
+- Setup nest-alias for deal with importing files
 
 ### Web
 - Shows backend errors
