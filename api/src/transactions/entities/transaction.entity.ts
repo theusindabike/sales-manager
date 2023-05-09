@@ -10,7 +10,7 @@ export enum TransactionType {
 @Entity()
 export class Transaction {
   @PrimaryGeneratedColumn({
-    type: 'bigint',
+        type: 'bigint',
   })
   id: number;
 

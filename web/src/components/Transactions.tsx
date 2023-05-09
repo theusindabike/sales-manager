@@ -41,7 +41,7 @@ const Transcations: React.FC<{}> = () => {
         </div>
       ))}
       {service.status === 'error' && (
-        <div>Error, the backend moved to the dark side.</div>
+        <div>Error, something went wrong. Try again later</div>
       )}
         
     </>

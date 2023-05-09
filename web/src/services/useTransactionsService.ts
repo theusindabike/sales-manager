@@ -2,12 +2,10 @@ import { useEffect, useState } from 'react';
 import { Service } from '../types/Service';
 import { Transaction } from '../types/Transaction';
 
-// export interface Transcations {
-//   results: Transaction[];
-// }
+export type ListTransactions = Transaction[];
 
 const useTransactionService = () => {
-  const [result, setResult] = useState<Service<Transaction[]>>({
+  const [result, setResult] = useState<Service<ListTransactions>>({
     status: 'loading'
   });
 

@@ -2,20 +2,20 @@ import React, { Component } from 'react';
 import './App.css';
 // import CreateStarship from './components/CreateStarship';
 import Transactions from './components/Transactions';
+import FileUploader from './components/TransactionFileUploader';
 
 class App extends Component {
   render() {
     return (
       <div className="App">
-        <header className="header">
-          <div className="container">
-            <h1>Sales Manager </h1>
-            <p className="slogan">
-              Upload and fetch your Sales data.
-            </p>
-          </div>
+        <header className="header">          
+          <h1>Sales Manager </h1>
+          <p>
+            Upload and fetch your Sales data.
+          </p>
         </header>
         <div className="container">
+          <FileUploader />
           <Transactions />
         </div>
       </div>

@@ -1,3 +1,11 @@
+.header {
+  padding: 5px;
+}
+
+.container {
+  padding: 3px;
+}
+
 .grid {
   display: grid;
   grid-template-columns: 1fr 4fr 4fr 4fr 4fr;
@@ -10,4 +18,32 @@
   border-left: 1px solid black;
   border-bottom: 1px solid black;
   text-align: right;
+  padding: 1px;
+}
+
+.loader-container,
+.loader-container:before {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+.loader-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.loader-container:before {
+  content: '';
+  background-color: #a7a3a2;
+  opacity: 0.3;
+}
+.loader {
+  animation: loader-spin infinite 1s linear;
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+  border: 5px solid #bcc8dc;
+  border-top-color: #1f8dcc;
 }

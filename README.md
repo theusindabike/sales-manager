@@ -3,7 +3,6 @@
 ### Stack:
 - Docker compose
 - NestJS
-- React
 - Postgres
 
 
