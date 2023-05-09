@@ -5,6 +5,7 @@ import Loader from './Loader';
 
 function TransactionFileUploader() {
     const [file, setFile] = useState<File>();
+    const [isDisabled, setIsDisabled] = useState(false);
     const { service, uploadTransactionsFile } = useUploadTransactionsService();
 
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -17,13 +18,12 @@ function TransactionFileUploader() {
         if (!file) {
             return;
         }
+        setIsDisabled(!isDisabled);
 
         const formData = new FormData(); 
         formData.append('file', file);
 
-        uploadTransactionsFile(formData).then(() => {
-            console.info('bom dia');
-        });
+        uploadTransactionsFile(formData).then(() => {});
     };
     return (
         <div className='container'>
@@ -31,8 +31,8 @@ function TransactionFileUploader() {
             <p>
                 <strong>Select a file:</strong>
             </p>
-            <input name='file' type="file" onChange={handleFileChange}/>            
-            <button onClick={handleUploadClick}>Upload</button>
+            <input name='file' type="file" disabled={isDisabled} onChange={handleFileChange}/>            
+            <button disabled={isDisabled} onClick={handleUploadClick}>Upload</button>
 
             {service.status === 'loading' && (
                 <div className="loader-container">

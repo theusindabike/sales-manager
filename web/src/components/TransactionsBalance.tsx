@@ -1,22 +1,50 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Loader from './Loader';
 import useTransactionsBalanceService from '../services/useTransactionsBalanceService';
+import { TransactionBalance } from '../types/TransactionBalance';
 
 
 const TransactionsBalance: React.FC<{}> = () => {
-  const { service, transactionsBalance } = useTransactionsBalanceService();
-  //const [id, setId] = React.useState('');
-  console.info(service);
+  const initialTransactionBalanceState: TransactionBalance = {
+    name: '',
+    balanceAsSeller: 0,
+    balanceAsAffiliate: 0
+  };
 
-  const handleUploadClick = () => {
-    transactionsBalance('JOSE CARLOS').then(() => {
-      console.info('bom dia');
-    });
+  const [balance, setBalance] = useState<TransactionBalance>(
+    initialTransactionBalanceState
+  );
+
+  const { service, transactionsBalance } = useTransactionsBalanceService();
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    event.persist();
+    setBalance(prevBalance => ({
+      ...prevBalance,
+      [event.target.name]: event.target.value
+    }));
+  };
+
+  const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    transactionsBalance(balance.name);
   };
   return (
     <>
       <div className='container'>
         <h2>Balance Page</h2>
+        <form onSubmit={handleFormSubmit}>        
+        <div className="">
+          <label>Seller Name:</label>          
+          <input
+            type="text"
+            name="name"
+            value={balance.name}
+            onChange={handleChange}
+          />          
+          <button type="submit">Load Balance</button>
+          </div>
+        </form>
         <div className="grid-3">
           <span>
             <strong>Name</strong>

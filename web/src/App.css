@@ -126,3 +126,37 @@ nav .nav-items {
   border: 5px solid #bcc8dc;
   border-top-color: #15925c;
 }
+
+@keyframes loader-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+input {
+  font-size: 18px;
+  padding: 5px;
+  margin: 5px;
+  border-radius: 3px;
+  box-shadow: none;
+  border: 1px solid #a7a3a2;
+  
+}
+input:focus {
+  outline-color: #15925c;
+  outline-width: 3px;
+}
+
+button {
+  font-size: 18px;
+  padding: 8px 15px;
+  margin: 15px 5px;
+  border-radius: 5px;
+  border-width: 0;
+  outline: none;
+  background-color: #15925c;
+  color: #fff;
+}

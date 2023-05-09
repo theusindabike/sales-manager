@@ -34,7 +34,7 @@ const TranscationsList: React.FC<{}> = () => {
           </div>
         )}
         {service.status === 'loaded' && service.payload.map(transaction => (            
-          <div className="grid-5">
+          <div key={transaction.id} className="grid-5">
             <span>{TransactionType[transaction.type]}</span>
             <span>{format(new Date(transaction.date), 'dd-MM-yyyy hh:mm:ss')}</span>
             <span>{transaction.productDescription}</span>

@@ -29,5 +29,6 @@
 - Mult-file upload
 
 ### Web
-- Filter by Seller and shows balance
 - Shows backend errors
+- Balance Page: Replace free input text by a drop-down one
+- Add Material UI lib
