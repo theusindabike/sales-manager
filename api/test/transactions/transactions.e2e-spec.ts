@@ -68,6 +68,6 @@ describe('TransactionController (e2e)', () => {
       .get('/transactions?sellerName=' + encodeURI(SELLER_NAME_1))
       .expect(200);
 
-    expect(data.body[0].length).toEqual(3);
+    expect(data.body.length).toEqual(3);
   });
 });

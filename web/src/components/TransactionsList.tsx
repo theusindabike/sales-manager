@@ -1,6 +1,8 @@
 import React from 'react';
 import useTranscationsService from '../services/useTransactionsService';
 import Loader from './Loader';
+import { format } from 'date-fns';
+import { TransactionType } from '../types/Transaction';
 
 
 const TranscationsList: React.FC<{}> = () => {
@@ -33,8 +35,8 @@ const TranscationsList: React.FC<{}> = () => {
         )}
         {service.status === 'loaded' && service.payload.map(transaction => (            
           <div className="grid-5">
-            <span>{transaction.type}</span>
-            <span>{transaction.date}</span>
+            <span>{TransactionType[transaction.type]}</span>
+            <span>{format(new Date(transaction.date), 'dd-MM-yyyy hh:mm:ss')}</span>
             <span>{transaction.productDescription}</span>
             <span>{transaction.value}</span>
             <span>{transaction.sellerName}</span>

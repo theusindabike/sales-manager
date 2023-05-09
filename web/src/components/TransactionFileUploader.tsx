@@ -41,7 +41,7 @@ function TransactionFileUploader() {
             )}
             {service.status === 'loaded' && (
                 <p>
-                    <strong>Your file was uploaded. Please refresh the page.</strong>
+                    <strong>Your file was uploaded.</strong>
                 </p>
             )}
             {service.status === 'error' && (

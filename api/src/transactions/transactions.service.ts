@@ -14,12 +14,13 @@ export class TransactionsService {
   }
 
   findAll() {
-    return this.transactionRepository.find();
+    return this.transactionRepository.find({ order: { date: 'ASC' } });
   }
 
   findBySellerName(sellerName: string) {
-    return this.transactionRepository.findAndCountBy({
-      sellerName: sellerName,
+    return this.transactionRepository.find({
+      where: { sellerName: sellerName },
+      order: { date: 'ASC' },
     });
   }
 
