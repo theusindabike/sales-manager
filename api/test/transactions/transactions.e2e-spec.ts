@@ -59,7 +59,7 @@ describe('TransactionController (e2e)', () => {
         .expect(200);
       expect(data.body).toEqual({
         name: sellerName_1,
-        balanceAsSeller: 210,
+        balanceAsSeller: 337.5,
         balanceAsAffiliate: 0,
       });
     });
@@ -70,7 +70,6 @@ describe('TransactionController (e2e)', () => {
       const data = await request(app.getHttpServer())
         .get(`/transactions?sellerName=${encodeURI(sellerName_1)}`)
         .expect(200);
-
       expect(data.body.length).toEqual(3);
     });
   });

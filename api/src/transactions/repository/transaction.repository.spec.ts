@@ -3,6 +3,7 @@ import { Transaction, TransactionType } from './../entities/transaction.entity';
 import { TransactionRepository } from './../repository/transactions.repository';
 import { DataSource } from 'typeorm';
 import { setupDatabase } from '../../../test/setup-database';
+import { TransactionValuesDto } from '../dto/balance.dto';
 
 describe('TransactionsService', () => {
   const seller_1 = 'JOSE CARLOS';
@@ -20,7 +21,7 @@ describe('TransactionsService', () => {
     new Transaction(
       null,
       TransactionType.AFFILIATE_SALE,
-      new Date('2021-12-03T11:46:02-03:00'),
+      new Date('2022-01-16T14:13:54-03:00'),
       'CURSO DE BEM-ESTAR',
       127.5,
       affiliate_1,
@@ -80,20 +81,38 @@ describe('TransactionsService', () => {
   });
 
   it('get seller balance', async () => {
-    const result = await transactionRepository.getSellerBalanceByName(seller_1);
-    expect(result).toEqual({
-      name: seller_1,
-      balance: transactions[0].value - transactions[2].value,
-    });
+    const result = await transactionRepository.getSellerSalesCommissionDiscountedByName(seller_1);
+    expect(result).toEqual(
+      TransactionValuesDto.of({
+        name: seller_1,
+        value: transactions[0].value - transactions[2].value,
+      }),
+    );
   });
 
   it('get affiliate balance', async () => {
-    const result = await transactionRepository.getAffiliateBalanceByName(
+    const result = await transactionRepository.getAffiliateCommissionByName(
       affiliate_1,
     );
-    expect(result).toEqual({
-      name: affiliate_1,
-      balance: transactions[1].value + transactions[3].value,
-    });
+    expect(result).toEqual(
+      TransactionValuesDto.of({
+        name: affiliate_1,
+        value: transactions[3].value,
+      }),
+    );
+  });
+
+  it('get affiliate sales', async () => {
+    const result =
+      await transactionRepository.getAffiliateSalesToSellerRecieveBySellerName(
+        seller_1,
+      );
+
+    expect(result).toEqual(
+      TransactionValuesDto.of({
+        name: seller_1,
+        value: transactions[1].value,
+      }),
+    );
   });
 });

@@ -34,17 +34,31 @@ export class TransactionsService {
   }
 
   async getBalanceByName(name: string): Promise<BalanceDto> {
-    const [sellerBalanceResult, affiliateBalanceResult] = await Promise.all([
-      this.transactionRepository.getSellerBalanceByName(name),
-      this.transactionRepository.getAffiliateBalanceByName(name),
+    const [
+      sellerSalesResult,
+      affiliateCommissionResult,
+      affiliateSalesToSellerRecieveResult,
+    ] = await Promise.all([
+      this.transactionRepository.getSellerSalesCommissionDiscountedByName(name),
+      this.transactionRepository.getAffiliateCommissionByName(name),
+      this.transactionRepository.getAffiliateSalesToSellerRecieveBySellerName(
+        name,
+      ),
     ]);
+
+    const balanceAsSeller =
+      (sellerSalesResult ? sellerSalesResult.value : 0) +
+      (affiliateSalesToSellerRecieveResult
+        ? affiliateSalesToSellerRecieveResult.value
+        : 0);
+    const balanceAsAffiliate = affiliateCommissionResult
+      ? affiliateCommissionResult.value
+      : 0;
 
     return BalanceDto.of({
       name: name,
-      balanceAsSeller: sellerBalanceResult ? sellerBalanceResult.balance : 0,
-      balanceAsAffiliate: affiliateBalanceResult
-        ? affiliateBalanceResult.balance
-        : 0,
+      balanceAsSeller: balanceAsSeller,
+      balanceAsAffiliate: balanceAsAffiliate,
     });
   }
 }

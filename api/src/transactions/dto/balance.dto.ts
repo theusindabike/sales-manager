@@ -16,15 +16,17 @@ export class BalanceDto {
   }
 }
 
-export class GetBalanceDto {
+export class TransactionValuesDto {
   @ApiProperty()
   name: string;
 
   @ApiProperty()
-  balance: number;
+  value: number;
 
-  public static of(params: Partial<GetBalanceDto>): GetBalanceDto {
-    const getBalanceDto = new GetBalanceDto();
-    return Object.assign(getBalanceDto, params);
+  public static of(
+    params: Partial<TransactionValuesDto>,
+  ): TransactionValuesDto {
+    const getTransactionValuesDto = new TransactionValuesDto();
+    return Object.assign(getTransactionValuesDto, params);
   }
 }
