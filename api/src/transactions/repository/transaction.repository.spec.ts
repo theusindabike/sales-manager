@@ -81,7 +81,10 @@ describe('TransactionsService', () => {
   });
 
   it('get seller balance', async () => {
-    const result = await transactionRepository.getSellerSalesCommissionDiscountedByName(seller_1);
+    const result =
+      await transactionRepository.getSellerSalesCommissionDiscountedByName(
+        seller_1,
+      );
     expect(result).toEqual(
       TransactionValuesDto.of({
         name: seller_1,
