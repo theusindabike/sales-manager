@@ -1,0 +1,22 @@
+# build stage
+FROM node:18.16.0-bullseye-slim as BUILD
+
+USER node
+WORKDIR /home/node/api
+
+COPY package*.json /home/node/api
+RUN npm ci
+
+# final stage
+FROM node:18.16.0-bullseye-slim
+
+WORKDIR /home/node/api
+
+RUN apt-get update && apt-get install -y procps && rm -rf /var/lib/apt/lists/*
+
+COPY --chown=node:node --from=build /home/node/api/node_modules /home/node/api/node_modules
+COPY --chown=node:node . /home/node/api
+
+RUN chown node:node /home/node/api
+
+CMD ["npm", "run", "start:dev"]
